@@ -48,7 +48,7 @@ namespace CrawfisSoftware.Tiling.TileSets
         public void AddTiles(Func<ITile2D, bool> predicate)
         {
             foreach (var tile in TileDatabase.Instance.FindTiles(predicate))
-                _tileSet.Add(tile);
+                m_tileSet.Add(tile);
         }
     }
 }

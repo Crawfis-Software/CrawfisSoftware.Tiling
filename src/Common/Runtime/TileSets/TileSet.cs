@@ -14,7 +14,7 @@ namespace CrawfisSoftware.Tiling.TileSets
         /// <summary>
         /// Protected. The list of tiles in this tileSet.
         /// </summary>
-        protected IList<ITile2D> _tileSet = new List<ITile2D>();
+        protected IList<ITile2D> m_tileSet = new List<ITile2D>();
 
         /// <inheritdoc/>
         public string Name { get; set; }
@@ -26,7 +26,7 @@ namespace CrawfisSoftware.Tiling.TileSets
         /// <inheritdoc/>
         public int Count
         {
-            get { return _tileSet.Count; }
+            get { return m_tileSet.Count; }
         }
 
         /// <inheritdoc/>
@@ -77,7 +77,7 @@ namespace CrawfisSoftware.Tiling.TileSets
         /// <inheritdoc/>
         public ITile2D GetTile(int tileID)
         {
-            foreach (var tile in from tile in _tileSet
+            foreach (var tile in from tile in m_tileSet
                                  where tile.ID == tileID
                                  select tile)
             {
@@ -90,14 +90,14 @@ namespace CrawfisSoftware.Tiling.TileSets
         /// <inheritdoc/>
         public IList<ITile2D> GetMatchingTiles(int leftChoice, int topChoice, int rightChoice, int bottomChoice)
         {
-            var list = _tileSet.Where<ITile2D>(TileSearchUtility.MeetsConstraints(leftChoice, topChoice, rightChoice, bottomChoice));
+            var list = m_tileSet.Where<ITile2D>(TileSearchUtility.MeetsConstraints(leftChoice, topChoice, rightChoice, bottomChoice));
             return list.ToList<ITile2D>();
         }
 
         /// <inheritdoc/>
         public bool TryGetMatchingTiles(int leftChoice, int topChoice, int rightChoice, int bottomChoice, out IList<ITile2D> tiles)
         {
-            var list = _tileSet.Where<ITile2D>(TileSearchUtility.MeetsConstraints(leftChoice, topChoice, rightChoice, bottomChoice));
+            var list = m_tileSet.Where<ITile2D>(TileSearchUtility.MeetsConstraints(leftChoice, topChoice, rightChoice, bottomChoice));
             tiles = list.ToList<ITile2D>();
             if (tiles.Count > 0)
                 return true;
@@ -110,7 +110,7 @@ namespace CrawfisSoftware.Tiling.TileSets
         /// <param name="tile">The tile to add</param>
         public void AddTile(ITile2D tile)
         {
-            _tileSet.Add(tile);
+            m_tileSet.Add(tile);
         }
 
         /// <summary>
@@ -127,13 +127,13 @@ namespace CrawfisSoftware.Tiling.TileSets
         /// </summary> 
         public void SetDefaultTile(int index)
         {
-            DefaultTile = _tileSet[index];
+            DefaultTile = m_tileSet[index];
         }
 
         /// <inheritdoc/>
         public IEnumerator<ITile2D> GetEnumerator()
         {
-            return _tileSet.GetEnumerator();
+            return m_tileSet.GetEnumerator();
         }
 
         /// <inheritdoc/>

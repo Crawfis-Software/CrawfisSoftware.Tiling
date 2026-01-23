@@ -1,6 +1,7 @@
 #if !UNITY_5_3_OR_NEWER
-using System; 
+using System;
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 namespace CrawfisSoftware.Tiling.UnityEngine
 {
     public struct Vector2

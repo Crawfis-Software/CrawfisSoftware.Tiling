@@ -1,0 +1,100 @@
+name: package
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  build-pack:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore
+        run: dotnet restore CrawfisSoftware.Tiling.csproj
+
+      - name: Build
+        run: dotnet build CrawfisSoftware.Tiling.csproj -c Release --no-restore
+
+      - name: Pack NuGet
+        run: dotnet pack CrawfisSoftware.Tiling.csproj -c Release -o artifacts --no-build
+
+      - name: Upload NuGet artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: nuget-package
+          path: artifacts/*.nupkg
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Pack UPM tarball
+        run: npm pack Packages/com.crawfissoftware.tiling
+
+      - name: Upload UPM tarball
+        uses: actions/upload-artifact@v4
+        with:
+          name: upm-tarball
+          path: com.crawfissoftware.tiling-*.tgz
+
+  publish-nuget:
+    needs: build-pack
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    environment: release
+    steps:
+      - name: Download NuGet artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: nuget-package
+          path: artifacts
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Push to nuget.org
+        run: dotnet nuget push "artifacts/*.nupkg" --source https://api.nuget.org/v3/index.json
+
+  attach-release-assets:
+    needs: build-pack
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download NuGet artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: nuget-package
+          path: artifacts
+
+      - name: Download UPM tarball
+        uses: actions/download-artifact@v4
+        with:
+          name: upm-tarball
+          path: upm
+
+      - name: Upload to release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            artifacts/*.nupkg
+            upm/com.crawfissoftware.tiling-*.tgz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

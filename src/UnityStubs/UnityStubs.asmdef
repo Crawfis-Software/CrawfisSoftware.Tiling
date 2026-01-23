@@ -1,0 +1,30 @@
+{
+  "name": "CrawfisSoftware.Tiling.UnityStubs",
+  "rootNamespace": "CrawfisSoftware.Tiling.UnityEngine",
+  "references": [],
+  "includePlatforms": [],
+  "excludePlatforms": [
+    "Editor",
+    "Windows",
+    "WindowsServer",
+    "OSX",
+    "Linux",
+    "LinuxServer",
+    "Android",
+    "iOS",
+    "tvOS",
+    "WebGL",
+    "PS4",
+    "PS5",
+    "XboxOne",
+    "GameCoreXboxOne",
+    "GameCoreScarlett",
+    "Switch"
+  ],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": []
+}

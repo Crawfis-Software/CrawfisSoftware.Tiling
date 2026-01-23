@@ -1,7 +1,4 @@
-﻿using System;
-
-[assembly: CLSCompliant(true)]
-namespace CrawfisSoftware.Tiling
+﻿namespace CrawfisSoftware.Tiling
 {
     /// <summary>
     /// Interface for a tiling.
