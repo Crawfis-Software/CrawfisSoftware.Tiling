@@ -51,6 +51,7 @@ jobs:
 
       - name: Pack UPM tarball
         shell: bash
+        working-directory: ${{ github.workspace }}
         run: |
           # Create a release tarball of the Unity package folder without involving npm/git.
           mkdir -p artifacts/upm
