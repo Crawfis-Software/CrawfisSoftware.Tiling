@@ -1,0 +1,15 @@
+{
+  "name": "CrawfisSoftware.Tiling",
+  "rootNamespace": "CrawfisSoftware.Tiling",
+  "references": [],
+  "includePlatforms": [],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [
+    "UNITY_2022_1_OR_NEWER"
+  ],
+  "versionDefines": []
+}

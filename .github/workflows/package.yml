@@ -54,10 +54,15 @@ jobs:
         working-directory: ${{ github.workspace }}
         run: |
           # Create a release tarball of the Unity package folder without involving npm/git.
-          mkdir -p artifacts/upm
-          tar -czf artifacts/upm/com.crawfissoftware.tiling-${GITHUB_REF_NAME#v}.tgz -C Packages com.crawfissoftware.tiling
+          if [ -d "Packages/com.crawfissoftware.tiling" ]; then
+            mkdir -p artifacts/upm
+            tar -czf artifacts/upm/com.crawfissoftware.tiling-${GITHUB_REF_NAME#v}.tgz -C Packages com.crawfissoftware.tiling
+          else
+            echo "Skipping UPM tarball: Packages/com.crawfissoftware.tiling not found"
+          fi
 
       - name: Upload UPM tarball
+        if: ${{ hashFiles('artifacts/upm/com.crawfissoftware.tiling-*.tgz') != '' }}
         uses: actions/upload-artifact@v4
         with:
           name: upm-tarball
@@ -109,6 +114,7 @@ jobs:
         with:
           name: upm-tarball
           path: upm
+        continue-on-error: true
 
       - name: Upload to release
         uses: softprops/action-gh-release@v2

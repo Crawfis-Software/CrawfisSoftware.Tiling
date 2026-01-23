@@ -199,8 +199,8 @@ PublishScripts/
 
 # UPM / npm-style tarballs generated for releases
 *.tgz
-# The packages folder can be ignored because of Package Restore
-**/[Pp]ackages/*
+# NuGet restore folder (do not ignore Unity UPM `Packages/`)
+packages/
 # except build/, which is used as an MSBuild target.
 !**/[Pp]ackages/build/
 # Uncomment if necessary however generally it will be regenerated when needed
