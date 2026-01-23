@@ -8,7 +8,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <PackageId>CrawfisSoftware.Tiling</PackageId>
-    <Version>0.1.0</Version>
+    <Version>0.2.0</Version>
     <Authors>CrawfisSoftware</Authors>
     <Description>Abstract tiling framework with flexible tile enumeration and tile determination (selection) classes</Description>
     <RepositoryUrl>https://github.com/Crawfis-Software/CrawfisSoftware.Tiling</RepositoryUrl>
@@ -42,20 +42,20 @@
 
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0"/>
+    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0"/>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All"/>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Properties\" />
+    <Folder Include="Properties\"/>
   </ItemGroup>
   <ItemGroup>
-    <None Include=".github\workflows\commitlint.yml" />
-    <None Include=".github\workflows\package.yml" />
-    <None Include=".github\workflows\release-please.yml" />
-    <None Include="README.md" Pack="true" PackagePath="" />
-    <None Include="LICENSE.txt" Pack="true" PackagePath="" />
-    <None Include="CHANGELOG.md" Pack="true" PackagePath="" />
-    <None Include="llms.txt" Pack="true" PackagePath="" Condition="Exists('llms.txt')" />
+    <None Include=".github\workflows\commitlint.yml"/>
+    <None Include=".github\workflows\package.yml"/>
+    <None Include=".github\workflows\release-please.yml"/>
+    <None Include="README.md" Pack="true" PackagePath=""/>
+    <None Include="LICENSE.txt" Pack="true" PackagePath=""/>
+    <None Include="CHANGELOG.md" Pack="true" PackagePath=""/>
+    <None Include="llms.txt" Pack="true" PackagePath="" Condition="Exists('llms.txt')"/>
   </ItemGroup>
 </Project>
