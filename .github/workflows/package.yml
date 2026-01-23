@@ -4,6 +4,9 @@ on:
   push:
     tags:
       - 'v*'
+  release:
+    types:
+      - published
   workflow_dispatch: {}
 
 permissions:
@@ -57,7 +60,7 @@ jobs:
 
   publish-nuget:
     needs: build-pack
-    if: github.event_name == 'push'
+    if: github.event_name == 'push' || github.event_name == 'release'
     runs-on: ubuntu-latest
     environment: release
     steps:
@@ -77,9 +80,19 @@ jobs:
 
   attach-release-assets:
     needs: build-pack
-    if: github.event_name == 'push'
+    if: github.event_name == 'push' || github.event_name == 'release'
     runs-on: ubuntu-latest
     steps:
+      - name: Determine tag
+        id: tag
+        shell: bash
+        run: |
+          if [ "${GITHUB_EVENT_NAME}" = "release" ]; then
+            echo "tag=${GITHUB_EVENT_RELEASE_TAG_NAME}" >> $GITHUB_OUTPUT
+          else
+            echo "tag=${GITHUB_REF_NAME}" >> $GITHUB_OUTPUT
+          fi
+
       - name: Download NuGet artifact
         uses: actions/download-artifact@v4
         with:
@@ -95,6 +108,7 @@ jobs:
       - name: Upload to release
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ steps.tag.outputs.tag }}
           files: |
             artifacts/*.nupkg
             artifacts/*.snupkg
