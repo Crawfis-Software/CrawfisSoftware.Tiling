@@ -12,12 +12,22 @@
     <Authors>CrawfisSoftware</Authors>
     <Description>Abstract tiling framework with flexible tile enumeration and tile determination (selection) classes</Description>
     <RepositoryUrl>https://github.com/Crawfis-Software/CrawfisSoftware.Tiling</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageProjectUrl>https://github.com/Crawfis-Software/CrawfisSoftware.Tiling</PackageProjectUrl>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageReleaseNotes>Please see CHANGELOG.md for release details.</PackageReleaseNotes>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <IsPackable>true</IsPackable>
     <SignAssembly>False</SignAssembly>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Title>Abstract tiling framework with flexible tile enumeration and tile determination (selection) classes</Title>
     <PackageTags>tiling; tileset; tile; Unity</PackageTags>
+
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
 
@@ -34,11 +44,17 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".github\workflows\package.yml" />
+    <None Include=".github\workflows\release-please.yml" />
+    <None Include="README.md" Pack="true" PackagePath="" />
+    <None Include="LICENSE.txt" Pack="true" PackagePath="" />
+    <None Include="CHANGELOG.md" Pack="true" PackagePath="" />
+    <None Include="llms.txt" Pack="true" PackagePath="" Condition="Exists('llms.txt')" />
   </ItemGroup>
 </Project>
