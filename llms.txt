@@ -1,0 +1,7 @@
+CrawfisSoftware.Tiling summary
+- Purpose: Core 2D tiling library (Wang tilings, maze/dungeon/path rendering, SVG/Unity outputs). Target netstandard2.1; shipped as NuGet and Unity UPM (Packages/com.crawfissoftware.tiling).
+- Key abstractions: ITile2D/Tile2D (edge colors + IDs), ITiling2D containers, ITileSet/TileSet/CompositeTileSet + TileDatabase, tile selectors (RandomTileSelector, SequentialTileSelector), tiling enumerators (Sequential, Random, ZOrder, Zigzag, Spiral, Hilbert, Boundary, Corner, UpperLeftQuadrant, Masked, Rectangle decorator), builders (MatchingTilingBuilder, RandomTilingBuilder, TilingBuilder), utilities (TileSetUtilities, TilingRemapper, ExplicitTiling2D).
+- Samples: ExampleProjects/TruchetTilingSVG and ExampleProjects/MazeTilingSVG show tiling creation and SVG export pipelines.
+- Build/package: dotnet pack CrawfisSoftware.Tiling.csproj -c Release -o ./artifacts; UPM tarball via npm pack Packages/com.crawfissoftware.tiling; tags v<version> trigger GitHub Actions release.
+- License: CC0 1.0 Universal.
+- Style: keep C# idioms, minimal comments unless clarifying; reuse existing abstractions instead of adding new selectors/enumerators unless necessary.

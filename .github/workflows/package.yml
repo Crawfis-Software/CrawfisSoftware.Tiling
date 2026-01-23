@@ -37,7 +37,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: nuget-package
-          path: artifacts/*.nupkg
+          path: |
+            artifacts/*.nupkg
+            artifacts/*.snupkg
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -71,7 +73,7 @@ jobs:
           dotnet-version: '8.0.x'
 
       - name: Push to nuget.org
-        run: dotnet nuget push "artifacts/*.nupkg" --source https://api.nuget.org/v3/index.json
+        run: dotnet nuget push "artifacts/*.nupkg" --source https://api.nuget.org/v3/index.json --symbol-source https://api.nuget.org/v3/index.json
 
   attach-release-assets:
     needs: build-pack
@@ -95,6 +97,7 @@ jobs:
         with:
           files: |
             artifacts/*.nupkg
+            artifacts/*.snupkg
             upm/com.crawfissoftware.tiling-*.tgz
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
