@@ -13,7 +13,7 @@ permissions:
   contents: write
   id-token: write
 
-jobs:  
+jobs:
   build-pack:
     runs-on: ubuntu-latest
     steps:
