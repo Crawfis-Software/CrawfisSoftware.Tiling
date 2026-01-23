@@ -50,13 +50,17 @@ jobs:
           node-version: '20'
 
       - name: Pack UPM tarball
-        run: npm pack Packages/com.crawfissoftware.tiling
+        shell: bash
+        run: |
+          # Create a release tarball of the Unity package folder without involving npm/git.
+          mkdir -p artifacts/upm
+          tar -czf artifacts/upm/com.crawfissoftware.tiling-${GITHUB_REF_NAME#v}.tgz -C Packages com.crawfissoftware.tiling
 
       - name: Upload UPM tarball
         uses: actions/upload-artifact@v4
         with:
           name: upm-tarball
-          path: com.crawfissoftware.tiling-*.tgz
+          path: artifacts/upm/com.crawfissoftware.tiling-*.tgz
 
   publish-nuget:
     needs: build-pack
