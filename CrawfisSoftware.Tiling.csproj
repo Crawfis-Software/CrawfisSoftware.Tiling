@@ -5,7 +5,12 @@
     <RootNamespace>CrawfisSoftware.Tiling</RootNamespace>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <AssemblyName>CrawfisSoftware.Tiling</AssemblyName>
+
+    <!-- Best practice: generate XML docs alongside the DLL in bin/... -->
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <DocumentationFile>$(OutputPath)$(AssemblyName).xml</DocumentationFile>
   </PropertyGroup>
+
   <PropertyGroup>
     <PackageId>CrawfisSoftware.Tiling</PackageId>
     <Version>0.2.0</Version>
@@ -29,26 +34,30 @@
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
+
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-
-    <DocumentationFile>$(SolutionDir)bin\Documentation\CrawfisSoftware.Tiling.xml</DocumentationFile>
-
     <OutputPath>$(SolutionDir)bin\Debug\</OutputPath>
   </PropertyGroup>
+
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-
-    <DocumentationFile>$(SolutionDir)\Documentation\CrawfisSoftware.Tiling.xml</DocumentationFile>
-
+    <!-- Avoid CI warning if the ruleset file isn't in the repo -->
+    <CodeAnalysisRuleSet Condition="Exists('MinimumRecommendedRules.ruleset')">MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="$(DocumentationFile)" Pack="true" PackagePath="" Visible="false" Condition="Exists('$(DocumentationFile)')" />
+  </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0"/>
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0"/>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All"/>
   </ItemGroup>
+
   <ItemGroup>
     <Folder Include="Properties\"/>
   </ItemGroup>
+
   <ItemGroup>
     <None Include=".github\workflows\commitlint.yml"/>
     <None Include=".github\workflows\package.yml"/>
