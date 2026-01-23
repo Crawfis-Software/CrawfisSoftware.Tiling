@@ -73,3 +73,19 @@
 - Automated (Release Please): version and `CHANGELOG.md` are managed by the release PR + merge.
 - Manual fallback: bump versions together: `CrawfisSoftware.Tiling.csproj` `<Version>` and `Packages/com.crawfissoftware.tiling/package.json` `version`.
 - Tag releases in Git to align with UPM Git consumption.
+
+## Conventional Commits (for Release Please)
+Release Please determines the next version by parsing commit messages. Use the Conventional Commits format:
+
+- Format: `<type>(optional-scope): <subject>`
+- Examples:
+  - `feat: add hex grid tiling`
+  - `fix: correct tile bounds check`
+  - `docs: update README`
+  - `chore: update dependencies`
+
+Breaking changes:
+- Use `feat!: ...` / `fix!: ...` or include a footer like:
+  - `BREAKING CHANGE: <description>`
+
+If you normally use PRs, an easy approach is to squash-merge and set the squash commit message to a Conventional Commit.
