@@ -4,7 +4,15 @@
     <OutputType>Library</OutputType>
     <RootNamespace>CrawfisSoftware.Tiling</RootNamespace>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <AssemblyName>CrawfisSoftware.Tiling</AssemblyName>
+
+    <!-- Fix NuGet package id -->
+    <PackageId>CrawfisSoftware.Tiling</PackageId>
+
+    <!-- Optional: prevent doubled assembly name -->
+    <AssemblyName>$(MSBuildProjectName)</AssemblyName>
+
+    <!-- Show README on NuGet -->
+    <PackageReadmeFile>README.md</PackageReadmeFile>
 
     <!-- Best practice: generate XML docs alongside the DLL in bin/... -->
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
@@ -12,9 +20,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <PackageId>CrawfisSoftware.Tiling</PackageId>
-    <Version>0.2.0</Version>
-    <Authors>CrawfisSoftware</Authors>
+   <Authors>CrawfisSoftware</Authors>
     <Description>Abstract tiling framework with flexible tile enumeration and tile determination (selection) classes</Description>
     <RepositoryUrl>https://github.com/Crawfis-Software/CrawfisSoftware.Tiling</RepositoryUrl>
     <RepositoryType>git</RepositoryType>

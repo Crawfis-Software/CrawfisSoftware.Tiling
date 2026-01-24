@@ -10,7 +10,7 @@ env:
 # This workflow builds and packages the project on versioned releases.
 #
 # What it produces:
-# - A NuGet package (`.nupkg`) and symbols package (`.snupkg`) from `CrawfisSoftware.Tiling.csproj`.
+# - A NuGet package (`.nupkg`) and symbols package (`.snupkg`) from `env.DOTNET_PROJECT`.
 # - An optional Unity Package Manager (UPM) tarball (`.tgz`) if the Unity package folder exists.
 # - Optionally publishes the NuGet packages to nuget.org and attaches artifacts to the GitHub Release.
 #
@@ -64,6 +64,16 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Determine package version
+        id: version
+        shell: bash
+        run: |
+          if [ "${GITHUB_REF_TYPE}" = "tag" ]; then
+            echo "version=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+          else
+            echo "version=0.0.0-ci.${GITHUB_RUN_NUMBER}" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Setup .NET
         # Install the .NET SDK used for restore/build/pack.
         # Although the library targets .NET Standard 2.1, the SDK can be newer.
@@ -84,7 +94,7 @@ jobs:
       - name: Pack NuGet
         # Create NuGet artifacts (.nupkg and optionally .snupkg) into the `artifacts` folder.
         # `--no-build` assumes the prior Build step succeeded.
-        run: dotnet pack ${{ env.DOTNET_PROJECT }} -c Release -o artifacts --no-build
+        run: dotnet pack ${{ env.DOTNET_PROJECT }} -c Release -o artifacts --no-build /p:PackageVersion=${{ steps.version.outputs.version }}
 
       - name: Upload NuGet artifact
         # Store generated NuGet artifacts as workflow artifacts so they can be:
@@ -133,6 +143,11 @@ jobs:
           name: upm-tarball
           path: artifacts/upm/${{ env.UPM_PACKAGE_ID }}-*.tgz
 
+      - name: Check packed files
+        run: |
+          echo "Contents of artifacts/"
+          ls -la artifacts/
+
   publish-nuget:
     needs: build-pack
     # Job id: `publish-nuget`
@@ -178,6 +193,7 @@ jobs:
       - name: Push NuGet symbols
         # Push the symbols package(s) to nuget.org for source/symbol debugging.
         # `--skip-duplicate` prevents failures if the version is already present.
+        if: ${{ hashFiles('artifacts/*.snupkg') != '' }}
         run: dotnet nuget push "artifacts/*.snupkg" --api-key ${{ steps.login.outputs.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
 
   attach-release-assets:
