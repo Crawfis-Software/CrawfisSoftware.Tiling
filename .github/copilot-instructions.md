@@ -3,6 +3,7 @@
 ## General Guidelines
 - First general instruction
 - Second general instruction
+- Use precise wording to distinguish filenames (e.g., `package.yml`) from directory paths (e.g., `.github/workflows/`) to avoid confusion.
 
 ## GitHub Actions
 - The default/release branch for the repository is `master`.

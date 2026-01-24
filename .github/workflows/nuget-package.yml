@@ -1,5 +1,12 @@
 name: package
 
+env:
+  DOTNET_VERSION: '8.0.x'
+  NODE_VERSION: '20'
+  DOTNET_PROJECT: 'CrawfisSoftware.Tiling.csproj'
+  UPM_PACKAGE_ID: 'com.crawfissoftware.tiling'
+  UPM_PACKAGE_DIR: 'Packages/com.crawfissoftware.tiling'
+
 # This workflow builds and packages the project on versioned releases.
 #
 # What it produces:
@@ -62,22 +69,22 @@ jobs:
         # Although the library targets .NET Standard 2.1, the SDK can be newer.
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: ${{ env.DOTNET_VERSION }}
 
       - name: Restore
         # Restore NuGet dependencies for the project.
         # This populates the NuGet package cache so subsequent build/pack can be done offline.
-        run: dotnet restore CrawfisSoftware.Tiling.csproj
+        run: dotnet restore ${{ env.DOTNET_PROJECT }}
 
       - name: Build
         # Build the project in Release configuration.
         # `--no-restore` assumes the prior Restore step succeeded.
-        run: dotnet build CrawfisSoftware.Tiling.csproj -c Release --no-restore
+        run: dotnet build ${{ env.DOTNET_PROJECT }} -c Release --no-restore
 
       - name: Pack NuGet
         # Create NuGet artifacts (.nupkg and optionally .snupkg) into the `artifacts` folder.
         # `--no-build` assumes the prior Build step succeeded.
-        run: dotnet pack CrawfisSoftware.Tiling.csproj -c Release -o artifacts --no-build
+        run: dotnet pack ${{ env.DOTNET_PROJECT }} -c Release -o artifacts --no-build
 
       - name: Upload NuGet artifact
         # Store generated NuGet artifacts as workflow artifacts so they can be:
@@ -95,7 +102,7 @@ jobs:
         # Unity/UPM packaging scenarios where Node tooling may be required.
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: ${{ env.NODE_VERSION }}
 
       - name: Pack UPM tarball
         shell: bash
@@ -110,21 +117,21 @@ jobs:
           #
           # The output filename uses the git tag version without a leading `v`.
           # Example: tag `v1.2.3` -> `com.crawfissoftware.tiling-1.2.3.tgz`.
-          if [ -d "Packages/com.crawfissoftware.tiling" ]; then
+          if [ -d "${{ env.UPM_PACKAGE_DIR }}" ]; then
             mkdir -p artifacts/upm
-            tar -czf artifacts/upm/com.crawfissoftware.tiling-${GITHUB_REF_NAME#v}.tgz -C Packages com.crawfissoftware.tiling
+            tar -czf artifacts/upm/${{ env.UPM_PACKAGE_ID }}-${GITHUB_REF_NAME#v}.tgz -C Packages ${{ env.UPM_PACKAGE_ID }}
           else
-            echo "Skipping UPM tarball: Packages/com.crawfissoftware.tiling not found"
+            echo "Skipping UPM tarball: ${{ env.UPM_PACKAGE_DIR }} not found"
           fi
 
       - name: Upload UPM tarball
         # Upload the UPM tarball if one was created by the previous step.
         # `hashFiles(...)` returns an empty string if no files match, which makes this step skip.
-        if: ${{ hashFiles('artifacts/upm/com.crawfissoftware.tiling-*.tgz') != '' }}
+        if: ${{ hashFiles(format('artifacts/upm/{0}-*.tgz', env.UPM_PACKAGE_ID)) != '' }}
         uses: actions/upload-artifact@v4
         with:
           name: upm-tarball
-          path: artifacts/upm/com.crawfissoftware.tiling-*.tgz
+          path: artifacts/upm/${{ env.UPM_PACKAGE_ID }}-*.tgz
 
   publish-nuget:
     needs: build-pack
@@ -152,7 +159,7 @@ jobs:
         # Install .NET SDK to run `dotnet nuget push`.
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: ${{ env.DOTNET_VERSION }}
 
       - name: NuGet login (OIDC ? temp API key)
         # Authenticate to nuget.org using GitHub OIDC.
@@ -221,7 +228,7 @@ jobs:
           files: |
             artifacts/*.nupkg
             artifacts/*.snupkg
-            upm/com.crawfissoftware.tiling-*.tgz
+            upm/${{ env.UPM_PACKAGE_ID }}-*.tgz
         env:
           # GitHub provides this token automatically; it is scoped to the repository.
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

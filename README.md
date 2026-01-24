@@ -55,7 +55,7 @@ For more end-to-end usage (SVG output, maze generation, Truchet tiles), see `Exa
 - `src/UnityStubs`: minimal types to allow non-Unity builds.
 - `Packages/com.crawfissoftware.tiling`: Unity UPM package manifest/assembly definition.
 - `ExampleProjects/*`: sample console apps that generate SVG tilings using this library.
-- `.github/workflows/package.yml`: automated packing/publishing workflow.
+- `.github/workflows/nuget-package.yml`: automated packing/publishing workflow.
 
 ## Build & publish
 - Build/pack NuGet: `dotnet pack CrawfisSoftware.Tiling.csproj -c Release -o ./artifacts` (targets `netstandard2.1`).
