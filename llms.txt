@@ -1,7 +1,41 @@
-CrawfisSoftware.Tiling summary
-- Purpose: Core 2D tiling library (Wang tilings, maze/dungeon/path rendering, SVG/Unity outputs). Target netstandard2.1; shipped as NuGet and Unity UPM (Packages/com.crawfissoftware.tiling).
-- Key abstractions: ITile2D/Tile2D (edge colors + IDs), ITiling2D containers, ITileSet/TileSet/CompositeTileSet + TileDatabase, tile selectors (RandomTileSelector, SequentialTileSelector), tiling enumerators (Sequential, Random, ZOrder, Zigzag, Spiral, Hilbert, Boundary, Corner, UpperLeftQuadrant, Masked, Rectangle decorator), builders (MatchingTilingBuilder, RandomTilingBuilder, TilingBuilder), utilities (TileSetUtilities, TilingRemapper, ExplicitTiling2D).
-- Samples: ExampleProjects/TruchetTilingSVG and ExampleProjects/MazeTilingSVG show tiling creation and SVG export pipelines.
-- Build/package: dotnet pack CrawfisSoftware.Tiling.csproj -c Release -o ./artifacts; UPM tarball via npm pack Packages/com.crawfissoftware.tiling; tags v<version> trigger GitHub Actions release.
-- License: CC0 1.0 Universal.
-- Style: keep C# idioms, minimal comments unless clarifying; reuse existing abstractions instead of adding new selectors/enumerators unless necessary.
+# CrawfisSoftware.Tiling llms.txt
+Concise map for LLMs: core 2D tiling library (Wang-style edges, maze/dungeon/path rendering) targeting `netstandard2.1`, packaged for NuGet and Unity (Packages/com.crawfissoftware.tiling). Favor existing abstractions and keep C# idioms minimal.
+
+Extensibility: This base package is designed to pair with additional tile sets (e.g., maze variants) and Unity-focused explicit tile sets/renderers. New tile sets, selectors, builders, and enumerators can be added by implementing the interfaces below; traversal and selection strategies are intentionally pluggable.
+
+## Primary documentation
+- [README](https://github.com/Crawfis-Software/CrawfisSoftware.Tiling/blob/master/README.md): Overview, usage, packaging, and release details.
+
+## Core interfaces (preferred entry points)
+- [src/Common/Runtime/Interfaces/ITile2D.cs](https://github.com/Crawfis-Software/CrawfisSoftware.Tiling/blob/master/src/Common/Runtime/Interfaces/ITile2D.cs): Tile edge colors/IDs contract.
+- [src/Common/Runtime/Interfaces/Tile2D.cs](https://github.com/Crawfis-Software/CrawfisSoftware.Tiling/blob/master/src/Common/Runtime/Interfaces/Tile2D.cs): Basic tile implementation backing `ITile2D`.
+- [src/Common/Runtime/Interfaces/Tiling2DIndex.cs](https://github.com/Crawfis-Software/CrawfisSoftware.Tiling/blob/master/src/Common/Runtime/Interfaces/Tiling2DIndex.cs): Index/value struct used across tilings.
+- [src/Common/Runtime/Interfaces/ITiling2D.cs](https://github.com/Crawfis-Software/CrawfisSoftware.Tiling/blob/master/src/Common/Runtime/Interfaces/ITiling2D.cs): 2D tiling container API.
+- [src/Common/Runtime/Interfaces/ITileSet.cs](https://github.com/Crawfis-Software/CrawfisSoftware.Tiling/blob/master/src/Common/Runtime/Interfaces/ITileSet.cs): Tile set abstraction (lookup by edge colors).
+- [src/Common/Runtime/Interfaces/ITileSelector.cs](https://github.com/Crawfis-Software/CrawfisSoftware.Tiling/blob/master/src/Common/Runtime/Interfaces/ITileSelector.cs): Strategy interface for picking tiles.
+- [src/Common/Runtime/Interfaces/ITilingEnumerator.cs](https://github.com/Crawfis-Software/CrawfisSoftware.Tiling/blob/master/src/Common/Runtime/Interfaces/ITilingEnumerator.cs): Traversal order contract for tilings.
+- [src/Common/Runtime/Interfaces/ITilingBuilder.cs](https://github.com/Crawfis-Software/CrawfisSoftware.Tiling/blob/master/src/Common/Runtime/Interfaces/ITilingBuilder.cs): Builder interface for composing tilings.
+- [src/Common/Runtime/Interfaces/TilingUtility.cs](https://github.com/Crawfis-Software/CrawfisSoftware.Tiling/blob/master/src/Common/Runtime/Interfaces/TilingUtility.cs): Shared helpers for tiling implementations.
+
+## Core implementations
+- [src/Common/Runtime/TileSets/TileSet.cs](https://github.com/Crawfis-Software/CrawfisSoftware.Tiling/blob/master/src/Common/Runtime/TileSets/TileSet.cs) / [CompositeTileSet.cs](https://github.com/Crawfis-Software/CrawfisSoftware.Tiling/blob/master/src/Common/Runtime/TileSets/CompositeTileSet.cs): Tile set implementations and composition support.
+- [src/Common/Runtime/TileSets/TileDatabase.cs](https://github.com/Crawfis-Software/CrawfisSoftware.Tiling/blob/master/src/Common/Runtime/TileSets/TileDatabase.cs): Registry/persistence for tile sets.
+- [src/Common/Runtime/TileSets/TileFactory.cs](https://github.com/Crawfis-Software/CrawfisSoftware.Tiling/blob/master/src/Common/Runtime/TileSets/TileFactory.cs) and [TileSetFactory.cs](https://github.com/Crawfis-Software/CrawfisSoftware.Tiling/blob/master/src/Common/Runtime/TileSets/TileSetFactory.cs): Creation utilities for tiles and sets.
+- [src/Common/Runtime/TileSets/TileSetUtilities.cs](https://github.com/Crawfis-Software/CrawfisSoftware.Tiling/blob/master/src/Common/Runtime/TileSets/TileSetUtilities.cs) and [TileSearchUtility.cs](https://github.com/Crawfis-Software/CrawfisSoftware.Tiling/blob/master/src/Common/Runtime/TileSets/TileSearchUtility.cs): Helpers for querying and transforming tile sets.
+- [src/Common/Runtime/TileSets/TileSetSelection.cs](https://github.com/Crawfis-Software/CrawfisSoftware.Tiling/blob/master/src/Common/Runtime/TileSets/TileSetSelection.cs) and [TileSetInfo.cs](https://github.com/Crawfis-Software/CrawfisSoftware.Tiling/blob/master/src/Common/Runtime/TileSets/TileSetInfo.cs): Metadata and selection descriptors.
+- [src/Common/Runtime/TileSets/AbstractPartialTileSet.cs](https://github.com/Crawfis-Software/CrawfisSoftware.Tiling/blob/master/src/Common/Runtime/TileSets/AbstractPartialTileSet.cs) and [AbstractMazeTileSet.cs](https://github.com/Crawfis-Software/CrawfisSoftware.Tiling/blob/master/src/Common/Runtime/TileSets/AbstractMazeTileSet.cs): Extension points for partial/maze-oriented sets.
+- [src/Common/Runtime/TilingBuilders/TilingBuilder.cs](https://github.com/Crawfis-Software/CrawfisSoftware.Tiling/blob/master/src/Common/Runtime/TilingBuilders/TilingBuilder.cs), [MatchingTilingBuilder.cs](https://github.com/Crawfis-Software/CrawfisSoftware.Tiling/blob/master/src/Common/Runtime/TilingBuilders/MatchingTilingBuilder.cs), [RandomTilingBuilder.cs](https://github.com/Crawfis-Software/CrawfisSoftware.Tiling/blob/master/src/Common/Runtime/TilingBuilders/RandomTilingBuilder.cs): Implementations of `ITilingBuilder` strategies.
+- [src/Common/Runtime/TileSelectors/RandomTileSelector.cs](https://github.com/Crawfis-Software/CrawfisSoftware.Tiling/blob/master/src/Common/Runtime/TileSelectors/RandomTileSelector.cs) and [SequentialTileSelector.cs](https://github.com/Crawfis-Software/CrawfisSoftware.Tiling/blob/master/src/Common/Runtime/TileSelectors/SequentialTileSelector.cs): Implementations of `ITileSelector`.
+
+## Tiling enumerators (traversal strategies)
+- [SequentialTilingEnumerator.cs](https://github.com/Crawfis-Software/CrawfisSoftware.Tiling/blob/master/src/Common/Runtime/TilingEnumerators/SequentialTilingEnumerator.cs), [RandomTilingEnumerator.cs](https://github.com/Crawfis-Software/CrawfisSoftware.Tiling/blob/master/src/Common/Runtime/TilingEnumerators/RandomTilingEnumerator.cs), [ZOrderTilingEnumerator.cs](https://github.com/Crawfis-Software/CrawfisSoftware.Tiling/blob/master/src/Common/Runtime/TilingEnumerators/ZOrderTilingEnumerator.cs), [ZigzagTilingEnumerator.cs](https://github.com/Crawfis-Software/CrawfisSoftware.Tiling/blob/master/src/Common/Runtime/TilingEnumerators/ZigzagTilingEnumerator.cs): Canonical traversal orders.
+- [SpiralTilingEnumerator.cs](https://github.com/Crawfis-Software/CrawfisSoftware.Tiling/blob/master/src/Common/Runtime/TilingEnumerators/SpiralTilingEnumerator.cs), [HilbertTilingEnumerator.cs](https://github.com/Crawfis-Software/CrawfisSoftware.Tiling/blob/master/src/Common/Runtime/TilingEnumerators/HilbertTilingEnumerator.cs), [CornerTilingEnumerator.cs](https://github.com/Crawfis-Software/CrawfisSoftware.Tiling/blob/master/src/Common/Runtime/TilingEnumerators/CornerTilingEnumerator.cs), [UpperLeftQuadrantEnumerator.cs](https://github.com/Crawfis-Software/CrawfisSoftware.Tiling/blob/master/src/Common/Runtime/TilingEnumerators/UpperLeftQuadrantEnumerator.cs): Patterned traversals.
+- [BoundaryTilingEnumerator.cs](https://github.com/Crawfis-Software/CrawfisSoftware.Tiling/blob/master/src/Common/Runtime/TilingEnumerators/BoundaryTilingEnumerator.cs), [RectangleTilingEnumeratorDecorator.cs](https://github.com/Crawfis-Software/CrawfisSoftware.Tiling/blob/master/src/Common/Runtime/TilingEnumerators/RectangleTilingEnumeratorDecorator.cs), [MaskedTilingEnumeratorDecorator.cs](https://github.com/Crawfis-Software/CrawfisSoftware.Tiling/blob/master/src/Common/Runtime/TilingEnumerators/MaskedTilingEnumeratorDecorator.cs): Region-aware traversal decorators.
+- [ExplicitTilingEnumerator.cs](https://github.com/Crawfis-Software/CrawfisSoftware.Tiling/blob/master/src/Common/Runtime/TilingEnumerators/ExplicitTilingEnumerator.cs): Iterator over explicit coordinate lists.
+
+## Utilities
+- [src/Common/Runtime/Utility/ExplicitTiling2D.cs](https://github.com/Crawfis-Software/CrawfisSoftware.Tiling/blob/master/src/Common/Runtime/Utility/ExplicitTiling2D.cs): Concrete `ITiling2D` built from explicit tile entries.
+- [src/Common/Runtime/Utility/TilingRemapper.cs](https://github.com/Crawfis-Software/CrawfisSoftware.Tiling/blob/master/src/Common/Runtime/Utility/TilingRemapper.cs): Remaps tilings via ID transformations.
+
+## Notes for LLMs
+- Enumerators and tile sets are intentionally extensible; additional traversal orders and tile libraries (including Unity-focused sets/renderers) can be added via the interfaces above.
