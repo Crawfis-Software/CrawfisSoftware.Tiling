@@ -1,7 +1,7 @@
 {
   "name": "com.crawfissoftware.tiling",
   "displayName": "Crawfis Software Tiling",
-  "version": "0.1.0",
+  "version": "0.3.0",
   "unity": "2022.1",
   "description": "Abstract tiling framework with flexible tile enumeration and tile selection classes.",
   "documentationUrl": "https://github.com/Crawfis-Software/CrawfisSoftware.Tiling",
