@@ -74,6 +74,11 @@ jobs:
             echo "version=0.0.0-ci.${GITHUB_RUN_NUMBER}" >> "$GITHUB_OUTPUT"
           fi
 
+      - name: Print package version
+        shell: bash
+        run: |
+          echo "Packing version: ${{ steps.version.outputs.version }}"
+
       - name: Setup .NET
         # Install the .NET SDK used for restore/build/pack.
         # Although the library targets .NET Standard 2.1, the SDK can be newer.
@@ -94,7 +99,7 @@ jobs:
       - name: Pack NuGet
         # Create NuGet artifacts (.nupkg and optionally .snupkg) into the `artifacts` folder.
         # `--no-build` assumes the prior Build step succeeded.
-        run: dotnet pack ${{ env.DOTNET_PROJECT }} -c Release -o artifacts --no-build /p:PackageVersion=${{ steps.version.outputs.version }}
+        run: dotnet pack ${{ env.DOTNET_PROJECT }} -c Release -o artifacts --no-build /p:Version=${{ steps.version.outputs.version }} /p:PackageVersion=${{ steps.version.outputs.version }}
 
       - name: Upload NuGet artifact
         # Store generated NuGet artifacts as workflow artifacts so they can be:
@@ -188,7 +193,7 @@ jobs:
       - name: Push NuGet packages
         # Push the main NuGet packages to nuget.org.
         # `--skip-duplicate` prevents failures if the version is already present.
-        run: dotnet nuget push "artifacts/*.nupkg" --api-key ${{ steps.login.outputs.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+        run: dotnet nuget push "artifacts/*.nupkg" --api-key ${{ steps.login.outputs.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate --no-symbols
 
       - name: Push NuGet symbols
         # Push the symbols package(s) to nuget.org for source/symbol debugging.
